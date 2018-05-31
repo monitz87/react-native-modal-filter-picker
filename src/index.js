@@ -93,11 +93,26 @@ export default class ModalFilterPicker extends Component {
     const {
       noResultsText,
       listViewProps,
+      noResultsOnSelect
     } = this.props
 
     const { ds } = this.state
 
     if (1 > ds.getRowCount()) {
+      if (noResultsOnSelect) {
+        this.defaultOptionKey = options.map((option) => option.key).join('')
+        return (
+          <ListView
+            enableEmptySections={false}
+            {...listViewProps}
+            dataSource={ds.cloneWithRows([{
+              key: this.defaultOptionKey,
+              label: noresultsText
+            }])}
+            renderRow={this.renderOption}
+          />
+        );
+      }
       return (
         <ListView
           enableEmptySections={false}
