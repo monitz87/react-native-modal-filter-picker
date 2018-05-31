@@ -1,4 +1,4 @@
-# react-native-modal-filter-picker
+# react-native-modal-filter-picker-default-option
 
 ftnk's version with support for a default option with custom behavior on click in the selector when nothing is found with the filter.
 
