@@ -108,7 +108,7 @@ export default class ModalFilterPicker extends Component {
             {...listViewProps}
             dataSource={ds.cloneWithRows([{
               key: this.defaultOptionKey,
-              label: noresultsText
+              label: noResultsText
             }])}
             renderRow={this.renderOption}
           />
