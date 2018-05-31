@@ -101,7 +101,7 @@ export default class ModalFilterPicker extends Component {
 
     if (1 > ds.getRowCount()) {
       if (noResultsOnSelect) {
-        this.defaultOptionKey = options.map((option) => option.key).join('')
+        this.defaultOptionKey = '0';
         return (
           <ListView
             enableEmptySections={false}
