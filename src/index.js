@@ -193,7 +193,7 @@ export default class ModalFilterPicker extends Component {
       ))
 
     if (!filtered.length && noResultsOnSelect) {
-      this.defaultOptionKey = options.map((option) => key).join('')
+      this.defaultOptionKey = options.map((option) => option.key).join('')
 
       filtered.push({
         key: this.defaultOptionKey,
