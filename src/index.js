@@ -93,7 +93,8 @@ export default class ModalFilterPicker extends Component {
     const {
       noResultsText,
       listViewProps,
-      noResultsOnSelect
+      noResultsOnSelect,
+      options
     } = this.props
 
     const { ds } = this.state
