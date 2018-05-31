@@ -37,7 +37,6 @@ export default class ModalFilterPicker extends Component {
       renderCancelButton,
       visible,
       modal,
-      onCancel
     } = this.props
 
     const renderedTitle = (!title) ? null : (
@@ -45,12 +44,7 @@ export default class ModalFilterPicker extends Component {
     )
 
     return (
-      <Modal
-        onRequestClose={onCancel}
-        {...modal}
-        visible={visible}
-        supportedOrientations={['portrait', 'landscape']}
-      >
+      <Modal {...modal} visible={visible} supportedOrientations={['portrait', 'landscape']}>
         <View style={overlayStyle || styles.overlay}>
           {renderedTitle}
           {(renderList || this.renderList)()}
@@ -65,7 +59,6 @@ export default class ModalFilterPicker extends Component {
   renderList = () => {
     const {
       showFilter,
-      autoFocus,
       listContainerStyle,
       androidUnderlineColor,
       placeholderText,
@@ -80,7 +73,6 @@ export default class ModalFilterPicker extends Component {
           onChangeText={this.onFilterChange}
           autoCorrect={false}
           blurOnSubmit={true}
-          autoFocus={autoFocus}
           autoCapitalize="none"
           underlineColorAndroid={androidUnderlineColor}
           placeholderTextColor={placeholderTextColor}
@@ -101,7 +93,6 @@ export default class ModalFilterPicker extends Component {
     const {
       noResultsText,
       listViewProps,
-      keyboardShouldPersistTaps
     } = this.props
 
     const { ds } = this.state
@@ -126,7 +117,6 @@ export default class ModalFilterPicker extends Component {
           {...listViewProps}
           dataSource={ds}
           renderRow={this.renderOption}
-          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
         />
       )
     }
@@ -156,11 +146,19 @@ export default class ModalFilterPicker extends Component {
       return (
         <TouchableOpacity activeOpacity={0.7}
           style={style}
-          onPress={() => this.props.onSelect(key)}
+          onPress={() => this.onSelect(key)}
         >
           <Text style={textStyle}>{label}</Text>
         </TouchableOpacity>
       )
+    }
+  }
+
+  onSelect = (key) => {
+    if (this.defaultOptionKey && this.defaultOptionKey === key) {
+      this.props.noResultsOnSelect();
+    } else {
+      this.props.onSelect(key);
     }
   }
 
@@ -182,7 +180,7 @@ export default class ModalFilterPicker extends Component {
   }
 
   onFilterChange = (text) => {
-    const { options } = this.props
+    const { options, noResultsText, noResultsOnSelect } = this.props
 
     const filter = text.toLowerCase()
 
@@ -193,6 +191,15 @@ export default class ModalFilterPicker extends Component {
         0 <= label.toLowerCase().indexOf(filter) ||
           (searchKey && 0 <= searchKey.toLowerCase().indexOf(filter))
       ))
+
+    if (!filtered.length && noResultsOnSelect) {
+      this.defaultOptionKey = options.map((option) => key).join('')
+
+      filtered.push({
+        key: this.defaultOptionKey,
+        label: noResultsText
+      })
+    }
 
     this.setState({
       filter: text.toLowerCase(),
@@ -211,6 +218,7 @@ ModalFilterPicker.propTypes = {
   cancelButtonText: PropTypes.string,
   title: PropTypes.string,
   noResultsText: PropTypes.string,
+  noResultsOnSelect: PropTypes.func,
   visible: PropTypes.bool,
   showFilter: PropTypes.bool,
   modal: PropTypes.object,
@@ -229,7 +237,6 @@ ModalFilterPicker.propTypes = {
   listContainerStyle: PropTypes.any,
   optionTextStyle:PropTypes.any,
   selectedOptionTextStyle:PropTypes.any,
-  keyboardShouldPersistTaps: PropTypes.string
 }
 
 ModalFilterPicker.defaultProps = {
@@ -240,5 +247,4 @@ ModalFilterPicker.defaultProps = {
   noResultsText: 'No matches',
   visible: true,
   showFilter: true,
-  keyboardShouldPersistTaps: 'never'
 }
